@@ -178,10 +178,50 @@ npm run test:watch
 Answer the following questions in your submission:
 
 1. What is the difference between the client and the server?
+
+The client and server perform distinct roles within a networked application. 
+The client initiates communication by sending requests to the server, while the 
+server listens for incoming connections, processes requests, and returns appropriate 
+responses. In this lab, the client sends text-based commands and the server 
+interprets those commands, executes the requested operation, and returns the 
+resulting output.
+
 2. Why does the server need to keep running after handling one request?
+
+A server must remain active after processing a request so that it can continue 
+providing services to connected clients and accept new client connections. If the 
+server terminated after handling a single request, it would be unable to support 
+ongoing communication or multiple requests over time. Continuous availability is 
+a fundamental characteristic of client-server systems and enables reliable interaction 
+between users and network services.
+
 3. What happens if two clients connect at the same time?
+
+When two clients connect simultaneously, the server must manage each 
+connection independently. Modern server applications typically use concurrent processing 
+techniques, such as asynchronous I/O, event-driven programming, or multithreading, to
+handle multiple clients efficiently. This allows each client to send commands and receive 
+responses without disrupting the communication of other connected clients.
+
 4. How is this different from HTTP?
 
+This lab utilizes a custom text-based protocol built directly on top of TCP sockets. 
+Clients send commands as plain text, and the server responds with corresponding output. 
+HTTP, while also operating over TCP, provides a standardized communication framework that 
+includes request methods, status codes, headers, message formatting rules, and additional 
+protocol features. As a result, HTTP is more structured and widely used for web-based 
+applications, whereas the protocol implemented in this lab is intentionally simplified 
+to demonstrate the underlying principles of client-server communication.
+
+
+
+## Final Protocol Description
+
+This application implements a simple command-based protocol using TCP sockets. 
+After establishing a connection, the client sends a command as a line of text, 
+and the server processes the command and returns a corresponding response. Commands
+are case-insensitive, while command arguments are treated as normal text unless 
+modified by the requested operation.
 ## Submission
 
 Submit your completed lab according to the course submission instructions.
