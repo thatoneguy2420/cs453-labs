@@ -269,10 +269,40 @@ npm run test:watch
 Answer the following questions in your submission:
 
 1. What is the difference between a TCP message and an HTTP request?
+
+A TCP message is raw data sent over a socket connection without a 
+required application-level structure. An HTTP request is more structured 
+because it includes a method, path, headers, status expectations, and 
+sometimes a body. In this lab, HTTP provides a more standardized way for 
+the client and server to communicate compared to the custom text protocol 
+used in Lab 1.
+
 2. What does the `Content-Type: application/json` header tell the server?
+
+The `Content-Type: application/json` header tells the server that the request
+body is formatted as JSON. This allows the server to know that it should 
+parse the incoming request body as JSON data instead of treating it as 
+plain text or another format.
+
 3. Why should a server return different HTTP status codes for different situations?
+
+A server should return different HTTP status codes so the client can understand the result
+of the request without relying only on the response message. For example, a `200` status code 
+means the request was successful, while a `400` indicates bad input from the client, and a `404` 
+means the requested route was not found. Using proper status codes makes the API easier to understand,
+debug, and use correctly.
+
 4. What happens if the client sends invalid JSON?
+
+If the client sends invalid JSON, the server should reject the request and return
+a `400 Bad Request` response with a JSON error message. This prevents the server from crashing 
+and clearly tells the client that the request body was not properly formatted.
+
 5. How is this lab different from Lab 1?
+
+Lab 1 used a raw TCP socket where the client and server exchanged simple text commands directly. 
+Lab 2 uses HTTP, which adds structure through methods, paths, headers, status codes, and 
+JSON request/response bodies. This makes Lab 2 closer to how real web APIs are designed and tested.
 
 ## Graduate Students
 
