@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Lab 3 Item API
   version: 1.0.0
-  description: TODO - briefly describe this API.
+  description: REST API for managing an in-memory collection of items.
 
 servers:
   - url: http://localhost:3000
@@ -23,21 +23,151 @@ paths:
                     type: string
                     example: ok
 
-  # TODO: Document GET /items.
-  # TODO: Document POST /items.
-  # TODO: Document GET /items/{id}.
-  # TODO: Document PUT /items/{id}.
-  # TODO: Document DELETE /items/{id}.
-  #
-  # Remember:
-  # - Express routes use :id, such as /items/:id.
-  # - OpenAPI paths use {id}, such as /items/{id}.
-  #
-  # You may define schemas under components/schemas if you want to avoid
-  # repeating the same object structure many times.
+  /items:
+    get:
+      summary: Return all items
+      responses:
+        "200":
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+
+    post:
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemInput"
+      responses:
+        "201":
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /items/{id}:
+    get:
+      summary: Return one item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Item found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    put:
+      summary: Update an existing item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemInput"
+      responses:
+        "200":
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      summary: Delete an existing item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Item deleted
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
-  # TODO: Define an Item schema with id, name, and quantity.
-  # TODO: Define an ItemInput schema with name and quantity.
-  # TODO: Define an ErrorResponse schema with an error message.
+    Item:
+      type: object
+      required:
+        - id
+        - name
+        - quantity
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: keyboard
+        quantity:
+          type: integer
+          example: 10
+
+    ItemInput:
+      type: object
+      required:
+        - name
+        - quantity
+      properties:
+        name:
+          type: string
+          example: monitor
+        quantity:
+          type: integer
+          example: 4
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Item not found
