@@ -16,7 +16,18 @@ function renderItems(items) {
 
   for (const item of items) {
     const li = document.createElement("li");
-    li.textContent = `${item.id}: ${item.name} (${item.quantity})`;
+    const itemText = document.createElement("span");
+    const deleteButton = document.createElement("button");
+
+    itemText.textContent = `${item.id}: ${item.name} (${item.quantity})`;
+
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      deleteItem(item.id);
+    });
+
+    li.append(itemText, deleteButton);
     itemList.appendChild(li);
   }
 }
@@ -39,6 +50,34 @@ async function loadItems() {
   }
 }
 
+async function deleteItem(id) {
+  setStatus(`Deleting item ${id}...`);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/items/${id}`, {
+      method: "DELETE"
+    });
+
+    if (!response.ok) {
+      let message = `DELETE /api/items/${id} failed with status ${response.status}`;
+
+      try {
+        const data = await response.json();
+        message = data.message ?? message;
+      } catch {
+        // Successful DELETE requests return no JSON body.
+      }
+
+      throw new Error(message);
+    }
+
+    setStatus(`Deleted item ${id}.`);
+    await loadItems();
+  } catch (error) {
+    setStatus(error.message);
+  }
+}
+
 async function addItem(name, quantity) {
   setStatus("Adding item...");
 
@@ -54,7 +93,10 @@ async function addItem(name, quantity) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? `POST /api/items failed with status ${response.status}`);
+      throw new Error(
+        data.message ??
+        `POST /api/items failed with status ${response.status}`
+      );
     }
 
     setStatus(`Added item: ${data.item.name}`);
